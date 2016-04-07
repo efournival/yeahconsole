@@ -192,7 +192,8 @@ int main(int argc, char *argv[])
 	    if (event.xunmap.window == termwin) {
 		if (opt_restart) {
                     if (opt_restart_hidden) {
-                        roll(UP);
+						if (opt_step) roll(UP);
+						XMoveWindow(dpy, win, opt_x, -height - opt_bw);
                         hidden = 1;
                     }
 		    init_xterm(0);
