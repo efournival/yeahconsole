@@ -335,12 +335,18 @@ void init_win()
     XColor color;
     XColor dummy_color;
 
+    XVisualInfo vinfo;
+    XMatchVisualInfo(dpy, DefaultScreen(dpy), 32, TrueColor, &vinfo);
+
     attrib.override_redirect = True;
-    attrib.background_pixel = BlackPixel(dpy, screen);
+    attrib.background_pixel = 0;
+    attrib.border_pixel = 0;
+    attrib.colormap = XCreateColormap(dpy, XDefaultRootWindow(dpy), vinfo.visual, AllocNone);
+
     win = XCreateWindow(dpy, root,
 			opt_x, -200, opt_width, 200,
-			0, CopyFromParent, InputOutput, CopyFromParent,
-			CWOverrideRedirect | CWBackPixel, &attrib);
+			0, vinfo.depth, InputOutput, vinfo.visual,
+			CWOverrideRedirect | CWBackPixel | CWColormap | CWBorderPixel, &attrib);
     XSelectInput(dpy, win,
 		 SubstructureNotifyMask | EnterWindowMask | LeaveWindowMask
 		 | KeyPressMask | ButtonPressMask | ButtonReleaseMask);
